@@ -9,8 +9,8 @@ var bn = true;
 function setup(){
     
     socket = io.connect('http://localhost:3000');
-    createCanvas(400,400);
-    b = new Ball(width/2,height/2,5,5,15);
+    createCanvas(500,500);
+    b = new Ball(width/2,height/2,4,4,15);
     socket.on('getCounter',function(data){
       counter = data;
       print(counter);
@@ -26,7 +26,7 @@ function setup(){
     v:p1.velocity,
     w:p1.w,
     h:p1.h,
-    p:p1.points
+    points:p1.points
   };
   socket.emit('start',data);
 
@@ -40,11 +40,6 @@ function setup(){
   socket.emit('startBall',data);
   
   if(counter === 2){
-    /*socket.on('needBall',function(data){
-      print(data);
-      b = new Ball(data.x,data.y,data.xv,data.yv,data.r);
-      bn = false;
-    })*/
     go = true;
   }
   });
@@ -69,6 +64,10 @@ function setup(){
 function draw(){
     background(0);
     rect(width/2,0,10,600);
+    textSize(40);
+    if(go === false)
+      text("Waiting for other player.", width/2 - 200, height/2);
+    fill(0, 102, 153);
     if(go === true){
     for(var i = 0; i < players.length; i++){
       var id = players[i].id;
@@ -78,29 +77,32 @@ function draw(){
         rect(players[i].x,players[i].y,players[i].w,players[i].h);
       }
     }
+    showPoints(players);
     p1.show();
     p1.move();
-    //print(b);
     b.show();
     b.move();
     if(b.collision(p1) && p1.x === 0)
-      b.xv = 5;
+      b.xv = 4;
     if(b.collision(p1) && p1.x === width)
-      b.xv = -5;
+      b.xv = -4;
     if(b.x < 0){
-      //throwBall();
-      b.xv = 5;
+      throwBall();
+      if(p1.x === width)
+        p1.points++;
     }
     if(b.x > width){
-        //throwBall();
-        b.xv = -5;
+        throwBall();
+        if(p1.x === 0)
+          p1.points++;
     }
-
+    print(p1.points);
     var data = {
     x:p1.x,
     y:p1.y,
     w:p1.w,
-    h:p1.h
+    h:p1.h,
+    points:p1.points
   };
 
   socket.emit('update',data);
@@ -115,26 +117,21 @@ function draw(){
   socket.emit('updateBall',data);
 }}
 
-/*function throwBall(){
-    if(balls.length > 0)
-      b = balls.pop();
-    else {
-      showWinner();
-      alert("Do you want to play again?");
-      window.location.reload();
-    }
+function throwBall(){
+    b.x = width / 2;
+    b.y = height /2;
 }
 
-function showWinner(){
-  background(0);
+function showPoints(p){
   textSize(80);
   fill(0, 102, 153);
-  if(p1.points > p2.points)
-    text("PLAYER1 WINS", width/2 - 100, height/2);
-  else if(p2.points > p1.points)
-    text("PLAYER2 WINS", width/2 - 100, height/2);
-  else
-    text("TIE", width/2 -100, height/2);
-
-}*/
+  for(var i = 0; i < p.length; i++){
+    if(p[i].points !== undefined){
+      if(p[i].x === 0)
+        text(p[i].points.toString(), width/2 - 100, height-100);
+      else
+        text(p[i].points.toString(), width/2 + 100, height-100);
+    }
+  }
+}
 

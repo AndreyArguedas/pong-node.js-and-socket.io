@@ -4,6 +4,8 @@ function Player(x){
    this.velocityy = 4;
    this.w = 20;
    this.h = 80;
+   this.top = this.x - this.h/2;
+   this.bottom = this.x + this.h/2;
    this.points = 0;
 
    this.show = function(){

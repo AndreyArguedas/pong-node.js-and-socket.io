@@ -17,20 +17,20 @@ function Ball(x,y,xv,yv,r){
     this.x += this.xv;
   }
 
-  this.collision = function(p){
-      var d = dist(this.x,this.y,p.x,p.y);
+  this.collision = function(e){
+      //var d = dist(this.x,this.y,p.x,p.y);
       var r = floor(random(2));
-      if(d < this.r + 20){
-        if(r === 1)
-            if(this.y-p.y < 0)
-              this.yv = 5;
-            else if(this.y - p.y == 0)
-              this.yv = 0;
-            else
-              this.yv = -5;
-        return true;
+      if(this.y <= e.y + e.h/2 && this.y >= e.y - e.h/2)
+        if(this.x >= e.top && this.x <= e.bottom){
+            if(r === 1)
+              if(this.y-e.y < 0)
+                this.yv = 5;
+              else if(this.y - e.y == 0)
+                this.yv = 0;
+              else
+                this.yv = -5;
+          return true;
       }
-      else
-        return false;
+      return false;
     }
 }

@@ -20,7 +20,6 @@ function Ball(id,x,y,xv,yv,r){
   this.r = r;
 }
 
-//b = new Ball(0,0,0,0,0,0);
 
 var express = require('express'); //Import the module
 var app = express(); //Now we have an express app
@@ -36,37 +35,26 @@ function getCounter(){
 	console.log(connections.length);
 }
 
-setInterval(heartbeat,30);
+setInterval(heartbeat,33);
 
 
 function heartbeat(){
 	io.sockets.emit('heartbeat',players);
 }
 
-setInterval(heartbeatBall,30);
+setInterval(heartbeatBall,33);
 
 
 function heartbeatBall(){
-	//if(connections.length === 2)
-		io.sockets.emit('heartbeatBall',b);
+	io.sockets.emit('heartbeatBall',b);
 }
-
-/*function needBall(){
-	if(balls.length > 0){
-		b = balls.pop()
-		io.sockets.emit('needBall',b);
-		console.log(b);
-	}
-	else
-		io.sockets.emit('needBall',"finished");
-}*/
 
 
 io.sockets.on('connection',function(socket){
 	connections.push(socket);
 	getCounter();
 	socket.on('start',function(data){
-		var p = new Player(socket.id,data.x,data.y,data.w,data.h,data.p);
+		var p = new Player(socket.id,data.x,data.y,data.w,data.h,data.points);
 		players.push(p);
 	}); 
 
@@ -90,7 +78,7 @@ io.sockets.on('connection',function(socket){
 		wich.v = data.v;
 		wich.w = data.w;
 		wich.h = data.h;
-
+		wich.points = data.points;
 	}); 
 
 	socket.on('updateBall',function(data){
@@ -101,8 +89,4 @@ io.sockets.on('connection',function(socket){
 		b.r = data.r;
 	}); 
 
-});//when someone connects
-
-/*
-	Gente pura vida. Estoy desarrollando un juego con node.js y socket.io, y tengo implementado que solo hayan 2 clientes por partida ya que el juego es 1 vs 1. Pero quisiera lograr que si otros 2 clientes se conectaran para ellos se maneje otra partida totalmente aparte, sin embargo no he podido encontrar algo similar o que se ajuste a esto que intento. Si alguien me pudiese dar una pequeña guía lo agradezco :)
-*/
+});
