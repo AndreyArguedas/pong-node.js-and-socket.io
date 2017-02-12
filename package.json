@@ -1,0 +1,21 @@
+{
+  "name": "pong",
+  "version": "1.0.0",
+  "description": "Pong with node and sockets",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "pong",
+    "node",
+    "socket"
+  ],
+  "author": "Andrey Arguedas",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.14.1",
+    "socket.io": "^1.7.2"
+  }
+}
